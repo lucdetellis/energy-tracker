@@ -32,8 +32,12 @@ test('parses evening Low and Average readings', () => {
   assert.equal(parseNotification(message('abc12345', 'energy_2026-10-19_21_low')).energy, 'low');
   assert.equal(parseNotification(message('abc12346', 'energy_2026-10-19_12_avg')).energy, 'avg');
 });
+test('accepts 10 PM and 11 PM readings, the last hours of the 9a-11p window', () => {
+  assert.equal(parseNotification(message('abc12345', 'energy_2026-10-19_22_high')).hour, 22);
+  assert.equal(parseNotification(message('abc12346', 'energy_2026-10-19_23_low')).hour, 23);
+});
 test('rejects out of-window, malformed, invalid-date and unrelated messages', () => {
-  for (const body of ['energy_2026-10-19_08_high','energy_2026-10-19_22_low','energy_2026-02-30_09_low','energy_2026-10-19_9_high','energy_2026-10-19_09_medium','Energy Tracker','energy_2026-10-19_09_high\nmore']) {
+  for (const body of ['energy_2026-10-19_08_high','energy_2026-10-19_24_low','energy_2026-02-30_09_low','energy_2026-10-19_9_high','energy_2026-10-19_09_medium','Energy Tracker','energy_2026-10-19_09_high\nmore']) {
     assert.equal(parseNotification(message('abc12345', body)), null, body);
   }
   assert.equal(parseNotification({ ...message(), event: 'open' }), null);

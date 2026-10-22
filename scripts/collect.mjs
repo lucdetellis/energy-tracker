@@ -32,7 +32,7 @@ export function parseNotification(notification) {
 
   const [, date, hourText, energy] = match;
   const hour = Number(hourText);
-  if (!validDate(date) || hour < 9 || hour > 21) return null;
+  if (!validDate(date) || hour < 9 || hour > 23) return null;
   if (!Number.isSafeInteger(notification.time) || notification.time <= 0) return null;
   const recordedAt = new Date(notification.time * 1000);
   if (Number.isNaN(recordedAt.valueOf())) return null;
