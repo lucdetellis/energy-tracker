@@ -201,5 +201,40 @@
     "hour": 10,
     "energy": "high",
     "recordedAt": "2026-10-22T15:10:32.000Z"
+  },
+  {
+    "id": "70uzG7ZjGOFZ",
+    "date": "2026-10-22",
+    "hour": 11,
+    "energy": "avg",
+    "recordedAt": "2026-10-22T16:00:33.000Z"
+  },
+  {
+    "id": "fFSvskRiOZch",
+    "date": "2026-10-22",
+    "hour": 12,
+    "energy": "avg",
+    "recordedAt": "2026-10-22T17:00:33.000Z"
+  },
+  {
+    "id": "mWgeEXKyArdn",
+    "date": "2026-10-22",
+    "hour": 13,
+    "energy": "low",
+    "recordedAt": "2026-10-22T18:01:03.000Z"
+  },
+  {
+    "id": "8qT4T8Ze2BAr",
+    "date": "2026-10-22",
+    "hour": 14,
+    "energy": "avg",
+    "recordedAt": "2026-10-22T19:01:37.000Z"
+  },
+  {
+    "id": "qCdAbuhOIrJl",
+    "date": "2026-10-22",
+    "hour": 15,
+    "energy": "low",
+    "recordedAt": "2026-10-22T20:00:20.000Z"
   }
 ]
