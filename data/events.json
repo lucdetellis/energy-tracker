@@ -1,1 +1,65 @@
-[]
+[
+  {
+    "id": "x511t5qSjGMC",
+    "date": "2026-10-21",
+    "hour": 13,
+    "energy": "avg",
+    "recordedAt": "2026-10-21T18:00:13.000Z"
+  },
+  {
+    "id": "rrT2Aycdov6w",
+    "date": "2026-10-21",
+    "hour": 14,
+    "energy": "low",
+    "recordedAt": "2026-10-21T19:00:11.000Z"
+  },
+  {
+    "id": "EQb8ejZUwiRd",
+    "date": "2026-10-21",
+    "hour": 15,
+    "energy": "low",
+    "recordedAt": "2026-10-21T20:00:20.000Z"
+  },
+  {
+    "id": "it89dcRquSan",
+    "date": "2026-10-21",
+    "hour": 16,
+    "energy": "low",
+    "recordedAt": "2026-10-21T21:00:15.000Z"
+  },
+  {
+    "id": "AfvSk97wIgXH",
+    "date": "2026-10-21",
+    "hour": 17,
+    "energy": "avg",
+    "recordedAt": "2026-10-21T22:06:03.000Z"
+  },
+  {
+    "id": "baZOnS28yopp",
+    "date": "2026-10-21",
+    "hour": 18,
+    "energy": "avg",
+    "recordedAt": "2026-10-21T23:00:12.000Z"
+  },
+  {
+    "id": "4v9JqyXm8aOj",
+    "date": "2026-10-21",
+    "hour": 19,
+    "energy": "high",
+    "recordedAt": "2026-10-22T00:00:23.000Z"
+  },
+  {
+    "id": "UPEAd5DxFGpO",
+    "date": "2026-10-21",
+    "hour": 20,
+    "energy": "high",
+    "recordedAt": "2026-10-22T01:03:50.000Z"
+  },
+  {
+    "id": "MS7wxmcGfiDG",
+    "date": "2026-10-21",
+    "hour": 21,
+    "energy": "high",
+    "recordedAt": "2026-10-22T02:00:28.000Z"
+  }
+]
