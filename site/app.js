@@ -133,19 +133,21 @@ function renderTrend(snapshot) {
     chart.append(svg('line', { x1: left, x2: width - right, y1: y(score), y2: y(score), stroke: 'currentColor', 'stroke-opacity': 0.3, 'stroke-dasharray': '2 4' }));
     chart.append(svg('text', { x: 0, y: y(score) + 3.5, fill: 'currentColor', 'font-size': 10 }, label));
   }
+  const line = svg('g', { class: 'text-neutral-700 dark:text-neutral-300' });
   let segment = [];
   const flush = () => {
-    if (segment.length > 1) chart.append(svg('path', { d: segment.map(([px, py], i) => `${i ? 'L' : 'M'}${px} ${py}`).join(''), fill: 'none', stroke: '#ff5a5f', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    if (segment.length > 1) line.append(svg('path', { d: segment.map(([px, py], i) => `${i ? 'L' : 'M'}${px} ${py}`).join(''), fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
     segment = [];
   };
   values.forEach((value, i) => (value === null ? flush() : segment.push([x(i), y(value)])));
   flush();
   values.forEach((value, i) => {
     if (value === null) return;
-    const dot = svg('circle', { cx: x(i), cy: y(value), r: values.length > 45 ? 1.75 : 2.75, fill: '#ff5a5f' });
+    const dot = svg('circle', { cx: x(i), cy: y(value), r: values.length > 45 ? 1.75 : 2.75, fill: 'currentColor' });
     dot.append(svg('title', {}, `${dayLabel(dates[i])}: ${value.toFixed(2)} / 3`));
-    chart.append(dot);
+    line.append(dot);
   });
+  chart.append(line);
   chart.append(svg('text', { x: left, y: height - 4, fill: 'currentColor', 'font-size': 10 }, dayLabel(dates[0]).replace(/^\w+, /, '')));
   chart.append(svg('text', { x: width - right, y: height - 4, fill: 'currentColor', 'font-size': 10, 'text-anchor': 'end' }, 'Today'));
   root.replaceChildren(chart);
