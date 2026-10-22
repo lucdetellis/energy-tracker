@@ -250,5 +250,12 @@
     "hour": 17,
     "energy": "avg",
     "recordedAt": "2026-10-22T22:00:17.000Z"
+  },
+  {
+    "id": "bxxVXMDCnJtj",
+    "date": "2026-10-22",
+    "hour": 18,
+    "energy": "high",
+    "recordedAt": "2026-10-22T23:06:39.000Z"
   }
 ]
