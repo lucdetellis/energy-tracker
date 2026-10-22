@@ -1,6 +1,6 @@
 // A zero-build, read-only GitHub Pages client.
 // The ntfy topic and GitHub Actions secret never reach this code.
-import { ZONE, HOURS, LEVELS, validEvent, latestPerSlot, dayAverage, dayShift, recentDates, chicagoNow, toCsv } from './lib.js';
+import { ZONE, HOURS, LEVELS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, dayAverage, dayShift, recentDates, chicagoNow, toCsv } from './lib.js';
 
 const PAGE_SIZE = 14;
 const LEVEL_NAMES = { high: 'High', avg: 'Avg', low: 'Low' };
@@ -12,12 +12,13 @@ const BLOCK_STYLES = {
   future: 'bg-neutral-100 dark:bg-neutral-800/60',
 };
 const $ = (id) => document.getElementById(id);
-const state = { events: [], days: PAGE_SIZE, selected: null, updatedAt: null, demo: new URLSearchParams(location.search).get('demo') === '1' };
+const state = { events: [], flags: [], days: PAGE_SIZE, selected: null, updatedAt: null, demo: new URLSearchParams(location.search).get('demo') === '1' };
 
 const shortHour = (hour) => `${hour % 12 || 12}${hour < 12 ? 'a' : 'p'}`;
 const longHour = (hour) => `${hour % 12 || 12} ${hour < 12 ? 'AM' : 'PM'}`;
 const dayLabel = (day) => new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' })
   .format(new Date(`${day}T12:00:00Z`));
+const flagName = (flag) => flag[0].toUpperCase() + flag.slice(1);
 const clockTime = (date) => new Intl.DateTimeFormat('en-US', { timeStyle: 'short', timeZone: ZONE }).format(date);
 
 function el(tag, className = '', text) {
@@ -42,6 +43,31 @@ function slotStatus(snapshot, date, hour) {
   return { kind: future ? 'future' : 'none' };
 }
 
+function selectSlot(date, hour) {
+  const key = `${date}|${hour}`;
+  state.selected = state.selected?.date === date && state.selected?.hour === hour ? null : { date, hour };
+  render(key);
+}
+
+// Flag initials sit under their hour's block; null when the day has no flags.
+function flagRow(snapshot, date, size) {
+  if (!HOURS.some((hour) => snapshot.flags.has(`${date}|${hour}`))) return null;
+  const row = el('div', `grid grid-cols-[repeat(15,minmax(0,1fr))] ${size === 'lg' ? 'mt-[3px] gap-[3px]' : 'mt-[2px] gap-[2px]'}`);
+  row.setAttribute('aria-hidden', 'true');
+  for (const hour of HOURS) {
+    const cell = el('div', 'flex flex-col gap-px');
+    for (const flag of snapshot.flags.get(`${date}|${hour}`) ?? []) {
+      cell.append(el('span', [
+        'block cursor-pointer truncate rounded-[2px] bg-neutral-200 text-center font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300',
+        size === 'lg' ? 'text-[10px] leading-[14px]' : 'text-[8px] leading-[11px]',
+      ].join(' '), snapshot.abbr[flag]));
+    }
+    cell.addEventListener('click', () => selectSlot(date, hour));
+    row.append(cell);
+  }
+  return row;
+}
+
 function blocks(snapshot, date, size) {
   const grid = el('div', `grid grid-cols-[repeat(15,minmax(0,1fr))] ${size === 'lg' ? 'gap-[3px]' : 'gap-[2px]'}`);
   for (const hour of HOURS) {
@@ -56,11 +82,9 @@ function blocks(snapshot, date, size) {
     block.type = 'button';
     block.dataset.key = `${date}|${hour}`;
     block.setAttribute('aria-pressed', String(selected));
-    block.setAttribute('aria-label', `${dayLabel(date)}, ${longHour(hour)}: ${LEVEL_NAMES[kind] ? `${LEVEL_NAMES[kind]} energy` : kind === 'future' ? 'upcoming' : 'no response'}`);
-    block.addEventListener('click', () => {
-      state.selected = selected ? null : { date, hour };
-      render(block.dataset.key);
-    });
+    const flags = (snapshot.flags.get(`${date}|${hour}`) ?? []).map(flagName);
+    block.setAttribute('aria-label', `${dayLabel(date)}, ${longHour(hour)}: ${LEVEL_NAMES[kind] ? `${LEVEL_NAMES[kind]} energy` : kind === 'future' ? 'upcoming' : 'no response'}${flags.length ? `; ${flags.join(', ')}` : ''}`);
+    block.addEventListener('click', () => selectSlot(date, hour));
     grid.append(block);
   }
   return grid;
@@ -68,9 +92,11 @@ function blocks(snapshot, date, size) {
 
 function detailText(snapshot, { date, hour }) {
   const { kind, event } = slotStatus(snapshot, date, hour);
-  if (!event) return `${longHour(hour)} · ${kind === 'future' ? 'Upcoming' : 'No response'}`;
+  const flags = (snapshot.flags.get(`${date}|${hour}`) ?? []).map(flagName);
+  const suffix = flags.length ? ` · ${flags.join(', ')}` : '';
+  if (!event) return `${longHour(hour)} · ${flags.length ? 'No energy response' : kind === 'future' ? 'Upcoming' : 'No response'}${suffix}`;
   const taps = state.events.filter((e) => e.date === date && e.hour === hour).length;
-  return `${longHour(hour)} · ${LEVEL_NAMES[kind]} · answered ${clockTime(new Date(event.recordedAt))}${taps > 1 ? ' (changed)' : ''}`;
+  return `${longHour(hour)} · ${LEVEL_NAMES[kind]} · answered ${clockTime(new Date(event.recordedAt))}${taps > 1 ? ' (changed)' : ''}${suffix}`;
 }
 
 function renderToday(snapshot) {
@@ -78,6 +104,9 @@ function renderToday(snapshot) {
   $('today-date').textContent = dayLabel(today);
   $('today-average').replaceChildren(levelTag(dayAverage(snapshot.slots, today)));
   $('today-blocks').replaceChildren(...blocks(snapshot, today, 'lg').children);
+  const flags = flagRow(snapshot, today, 'lg');
+  $('today-flags').replaceChildren(...(flags?.children ?? []));
+  $('today-flags').hidden = !flags;
 
   let detail;
   if (state.selected?.date === today) detail = detailText(snapshot, state.selected);
@@ -96,14 +125,18 @@ function renderHistory(snapshot) {
     const line = el('div', 'grid grid-cols-[1fr_3rem] items-center gap-2');
     const tag = levelTag(dayAverage(snapshot.slots, date));
     tag.classList.add('justify-self-end');
-    line.append(blocks(snapshot, date, 'sm'), tag);
+    const hours = el('div');
+    hours.append(blocks(snapshot, date, 'sm'));
+    const flags = flagRow(snapshot, date, 'sm');
+    if (flags) hours.append(flags);
+    line.append(hours, tag);
     row.append(line);
     if (state.selected?.date === date) row.append(el('p', 'mt-1.5 text-xs text-neutral-700 dark:text-neutral-300', detailText(snapshot, state.selected)));
     return row;
   });
   $('history').replaceChildren(...rows);
 
-  const earliest = state.events.reduce((min, e) => (e.date < min ? e.date : min), snapshot.now.date);
+  const earliest = [...state.events, ...state.flags].reduce((min, e) => (e.date < min ? e.date : min), snapshot.now.date);
   $('show-more').hidden = snapshot.dates[snapshot.dates.length - 1] <= earliest;
 }
 
@@ -163,7 +196,10 @@ function renderSyncStatus() {
 
 function render(focusKey) {
   const now = chicagoNow();
-  const snapshot = { now, dates: recentDates(now.date, state.days), slots: latestPerSlot(state.events) };
+  const snapshot = {
+    now, dates: recentDates(now.date, state.days), slots: latestPerSlot(state.events),
+    flags: flagsPerSlot(state.flags), abbr: flagAbbreviations(state.flags.map((f) => f.flag)),
+  };
   renderToday(snapshot);
   renderHistory(snapshot);
   renderTrend(snapshot);
@@ -173,7 +209,7 @@ function render(focusKey) {
 
 function makeDemo() {
   const now = chicagoNow();
-  const events = [];
+  const events = [], flags = [];
   for (let d = 0; d < 45; d++) {
     const date = dayShift(now.date, -d);
     for (const hour of HOURS) {
@@ -182,13 +218,18 @@ function makeDemo() {
       events.push({ id: `demo-${date}-${hour}`, date, hour, energy: value < 2 ? 'low' : value < 6 ? 'avg' : 'high',
         recordedAt: new Date(Date.parse(`${date}T${String(hour).padStart(2, '0')}:07:00-05:00`)).toISOString() });
     }
+    for (const [hour, flag, skip] of [[9, 'lam', 5], [9, 'coffee', 4], [14, 'coffee', 2], [21, 'ris', 6], [21, 'lam', 5]]) {
+      if ((d === 0 && hour > now.hour) || (d * 3 + hour) % 7 < skip - 2) continue;
+      flags.push({ id: `demo-${date}-${hour}-${flag}`, date, hour, flag,
+        recordedAt: new Date(Date.parse(`${date}T${String(hour).padStart(2, '0')}:08:00-05:00`)).toISOString() });
+    }
   }
-  return events;
+  return { events, flags };
 }
 
 async function refresh() {
   if (state.demo) {
-    state.events = makeDemo();
+    ({ events: state.events, flags: state.flags } = makeDemo());
     render();
     return;
   }
@@ -198,8 +239,9 @@ async function refresh() {
     const raw = await response.json();
     if (!Array.isArray(raw)) throw new Error('unexpected data file');
     state.events = raw.filter(validEvent);
+    state.flags = raw.filter(validFlag);
     const modified = Date.parse(response.headers.get('last-modified') ?? '');
-    const latest = state.events.reduce((max, e) => (e.recordedAt > max ? e.recordedAt : max), '');
+    const latest = [...state.events, ...state.flags].reduce((max, e) => (e.recordedAt > max ? e.recordedAt : max), '');
     state.updatedAt = !Number.isNaN(modified) ? new Date(modified) : latest ? new Date(latest) : null;
     $('load-error').hidden = true;
   } catch (error) {
@@ -211,7 +253,8 @@ async function refresh() {
 }
 
 function exportCsv() {
-  const url = URL.createObjectURL(new Blob([toCsv(state.events)], { type: 'text/csv;charset=utf-8' }));
+  const rows = [...state.events, ...state.flags].sort((a, b) => a.recordedAt.localeCompare(b.recordedAt) || a.id.localeCompare(b.id));
+  const url = URL.createObjectURL(new Blob([toCsv(rows)], { type: 'text/csv;charset=utf-8' }));
   const link = Object.assign(document.createElement('a'), { href: url, download: 'energy-tracker.csv' });
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 0);

@@ -36,6 +36,19 @@ test('accepts 10 PM and 11 PM readings, the last hours of the 9a-11p window', ()
   assert.equal(parseNotification(message('abc12345', 'energy_2026-10-19_22_high')).hour, 22);
   assert.equal(parseNotification(message('abc12346', 'energy_2026-10-19_23_low')).hour, 23);
 });
+test('parses a flag answer as a flag event', () => {
+  assert.deepEqual(parseNotification(message('abc12345', 'flag_2026-10-21_09_coffee')), {
+    id: 'abc12345', date: '2026-10-21', hour: 9, flag: 'coffee', recordedAt: new Date(1792450000 * 1000).toISOString(),
+  });
+});
+test('accepts flag names it has never seen, so the flag list can change without a collector update', () => {
+  assert.equal(parseNotification(message('abc12345', 'flag_2026-10-21_23_melatonin2')).flag, 'melatonin2');
+});
+test('rejects malformed and out-of-window flags', () => {
+  for (const body of ['flag_2026-10-21_08_lam', 'flag_2026-10-21_24_lam', 'flag_2026-10-21_09_', 'flag_2026-10-21_09_Lam', 'flag_2026-10-21_09_lam-x', 'flag_2026-10-21_09_2lam']) {
+    assert.equal(parseNotification(message('abc12345', body)), null, body);
+  }
+});
 test('rejects out of-window, malformed, invalid-date and unrelated messages', () => {
   for (const body of ['energy_2026-10-19_08_high','energy_2026-10-19_24_low','energy_2026-02-30_09_low','energy_2026-10-19_9_high','energy_2026-10-19_09_medium','Energy Tracker','energy_2026-10-19_09_high\nmore']) {
     assert.equal(parseNotification(message('abc12345', body)), null, body);

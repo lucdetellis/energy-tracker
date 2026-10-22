@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { HOURS, validEvent, latestPerSlot, dayAverage, levelFromScore, recentDates, toCsv } from '../site/lib.js';
+import { HOURS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, dayAverage, levelFromScore, recentDates, toCsv } from '../site/lib.js';
 
 const ev = (hour, energy, extra = {}) => ({
   id: `id-${hour}-${energy}`, date: '2026-10-21', hour, energy, recordedAt: `2026-10-21T${String(hour).padStart(2, '0')}:05:00.000Z`, ...extra,
@@ -14,6 +14,26 @@ test('accepts 11 PM events and rejects hours outside the window', () => {
   assert.equal(validEvent(ev(8, 'high')), false);
   assert.equal(validEvent(ev(24, 'high')), false);
   assert.equal(validEvent(ev(12, 'medium')), false);
+});
+const flag = (hour, name, id = `f-${hour}-${name}`) => ({
+  id, date: '2026-10-21', hour, flag: name, recordedAt: `2026-10-21T${String(hour).padStart(2, '0')}:06:00.000Z`,
+});
+test('flags are validated separately from energy readings', () => {
+  assert.equal(validFlag(flag(9, 'coffee')), true);
+  assert.equal(validFlag(flag(9, 'Coffee')), false);
+  assert.equal(validFlag(flag(8, 'coffee')), false);
+  assert.equal(validFlag(ev(9, 'high')), false);
+  assert.equal(validEvent(flag(9, 'coffee')), false);
+});
+test('collects every distinct flag tapped in an hour, ignoring repeat taps', () => {
+  const slots = flagsPerSlot([flag(9, 'lam'), flag(9, 'coffee'), flag(9, 'lam', 'again'), flag(21, 'ris')]);
+  assert.deepEqual(slots.get('2026-10-21|9'), ['coffee', 'lam']);
+  assert.deepEqual(slots.get('2026-10-21|21'), ['ris']);
+  assert.equal(slots.get('2026-10-21|10'), undefined);
+});
+test('abbreviates flags to their initial, lengthening only where initials collide', () => {
+  assert.deepEqual(flagAbbreviations(['lam', 'coffee', 'ris']), { coffee: 'C', lam: 'L', ris: 'R' });
+  assert.deepEqual(flagAbbreviations(['lam', 'lunch', 'coffee']), { coffee: 'C', lam: 'La', lunch: 'Lu' });
 });
 test('latest selection wins for a slot, ntfy ID breaking timestamp ties', () => {
   const slots = latestPerSlot([
@@ -42,9 +62,14 @@ test('averages a day over answered hours only, null when unanswered', () => {
 test('lists recent dates newest first, across month boundaries', () => {
   assert.deepEqual(recentDates('2026-11-02', 4), ['2026-11-02', '2026-11-01', '2026-10-31', '2026-10-30']);
 });
-test('exports every event to CSV with quoted fields', () => {
+test('exports energy readings and flags to CSV with quoted fields', () => {
   assert.equal(
-    toCsv([{ id: 'a"b', date: '2026-10-21', hour: 23, energy: 'low', recordedAt: '2026-10-22T04:05:00.000Z' }]),
-    '"date","hour","energy","recordedAt","id"\r\n"2026-10-21","23","low","2026-10-22T04:05:00.000Z","a""b"',
+    toCsv([
+      { id: 'a"b', date: '2026-10-21', hour: 23, energy: 'low', recordedAt: '2026-10-22T04:05:00.000Z' },
+      { id: 'c', date: '2026-10-21', hour: 23, flag: 'ris', recordedAt: '2026-10-22T04:06:00.000Z' },
+    ]),
+    '"date","hour","energy","flag","recordedAt","id"\r\n' +
+    '"2026-10-21","23","low","","2026-10-22T04:05:00.000Z","a""b"\r\n' +
+    '"2026-10-21","23","","ris","2026-10-22T04:06:00.000Z","c"',
   );
 });

@@ -1,6 +1,6 @@
 /**
  * Polls the ntfy response topic, retaining only parsed and validated energy
- * readings. The topic is read from an Actions secret; it is never published.
+ * readings and flags. The topic is read from an Actions secret; it is never published.
  *
  * Retention/recovery: we replay an 11-hour window, deduplicate by ntfy ID,
  * and save the full, growing history in Git. This is not an exact-once queue;
@@ -11,7 +11,8 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const DATA_FILE = fileURLToPath(new URL('../data/events.json', import.meta.url));
-const RESPONSE_PATTERN = /^energy_(\d{4}-\d{2}-\d{2})_(\d{2})_(high|avg|low)$/;
+const RESPONSE_PATTERN = /^(energy|flag)_(\d{4}-\d{2}-\d{2})_(\d{2})_([a-z][a-z0-9]{0,23})$/;
+const ENERGY_LEVELS = new Set(['high', 'avg', 'low']);
 const ID_PATTERN = /^[a-zA-Z0-9_-]{4,128}$/;
 const TOPIC_PATTERN = /^[a-zA-Z0-9_-]{8,200}$/;
 const CACHE_WINDOW = '11h';
@@ -30,9 +31,11 @@ export function parseNotification(notification) {
   const match = RESPONSE_PATTERN.exec(notification.message.trim());
   if (!match) return null;
 
-  const [, date, hourText, energy] = match;
+  // Flag names are open-ended so the sender's flag list can change freely.
+  const [, kind, date, hourText, answer] = match;
   const hour = Number(hourText);
   if (!validDate(date) || hour < 9 || hour > 23) return null;
+  if (kind === 'energy' && !ENERGY_LEVELS.has(answer)) return null;
   if (!Number.isSafeInteger(notification.time) || notification.time <= 0) return null;
   const recordedAt = new Date(notification.time * 1000);
   if (Number.isNaN(recordedAt.valueOf())) return null;
@@ -41,7 +44,7 @@ export function parseNotification(notification) {
     id: notification.id,
     date,
     hour,
-    energy,
+    [kind]: answer,
     recordedAt: recordedAt.toISOString(),
   };
 }

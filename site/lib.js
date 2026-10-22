@@ -10,6 +10,33 @@ export function validEvent(e) {
     typeof e.recordedAt === 'string' && !Number.isNaN(Date.parse(e.recordedAt));
 }
 
+// Flag names are open-ended (the sender's list may change); same shape as the collector accepts.
+export function validFlag(e) {
+  return Boolean(e) && typeof e.id === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date) &&
+    HOURS.includes(e.hour) && typeof e.flag === 'string' && /^[a-z][a-z0-9]{0,23}$/.test(e.flag) &&
+    typeof e.recordedAt === 'string' && !Number.isNaN(Date.parse(e.recordedAt));
+}
+
+export function flagsPerSlot(flags) {
+  const slots = new Map();
+  for (const { date, hour, flag } of flags) {
+    const key = `${date}|${hour}`;
+    if (!slots.has(key)) slots.set(key, new Set());
+    slots.get(key).add(flag);
+  }
+  return new Map([...slots].map(([key, names]) => [key, [...names].sort()]));
+}
+
+// Shortest prefix that tells each flag apart: lam/coffee/ris -> L/C/R.
+export function flagAbbreviations(names) {
+  const unique = [...new Set(names)].sort();
+  return Object.fromEntries(unique.map((name) => {
+    let length = 1;
+    while (length < name.length && unique.some((other) => other !== name && other.startsWith(name.slice(0, length)))) length++;
+    return [name, name[0].toUpperCase() + name.slice(1, length)];
+  }));
+}
+
 export function latestPerSlot(events) {
   const slots = new Map();
   for (const event of events) {
@@ -52,7 +79,7 @@ export function chicagoNow(date = new Date()) {
 }
 
 export function toCsv(events) {
-  const rows = [['date', 'hour', 'energy', 'recordedAt', 'id'],
-    ...events.map(({ date, hour, energy, recordedAt, id }) => [date, String(hour), energy, recordedAt, id])];
+  const rows = [['date', 'hour', 'energy', 'flag', 'recordedAt', 'id'],
+    ...events.map(({ date, hour, energy = '', flag = '', recordedAt, id }) => [date, String(hour), energy, flag, recordedAt, id])];
   return rows.map((row) => row.map((v) => `"${String(v).replaceAll('"', '""')}"`).join(',')).join('\r\n');
 }
