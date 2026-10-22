@@ -236,5 +236,19 @@
     "hour": 15,
     "energy": "low",
     "recordedAt": "2026-10-22T20:00:20.000Z"
+  },
+  {
+    "id": "6Uf0Ew23r0v6",
+    "date": "2026-10-22",
+    "hour": 16,
+    "energy": "avg",
+    "recordedAt": "2026-10-22T21:51:24.000Z"
+  },
+  {
+    "id": "ERlO8LM2gGf2",
+    "date": "2026-10-22",
+    "hour": 17,
+    "energy": "avg",
+    "recordedAt": "2026-10-22T22:00:17.000Z"
   }
 ]
