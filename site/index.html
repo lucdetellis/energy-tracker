@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f9f7" />
+    <meta name="description" content="An hour-by-hour view of energy levels over time." />
+    <title>Energy Tracker — Daily Rhythm</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="Energy Tracker home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span>energy<span class="brand-dot">.</span></span>
+        </a>
+        <div class="header-meta"><span class="status-pulse" aria-hidden="true"></span><span id="sync-status" role="status" aria-live="polite">Loading history</span></div>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <p class="eyebrow"><span class="eyebrow-line"></span> DAILY RHYTHM <span class="eyebrow-bullet">/</span> PERSONAL ANALYTICS</p>
+          <div class="hero-heading">
+            <div>
+              <h1 id="page-title">A little more <em>in tune.</em></h1>
+              <p class="hero-copy">An honest look at the ebb and flow of energy, one check-in at a time.</p>
+            </div>
+            <div class="hero-side" aria-label="Tracker timezone"><span class="hero-side-label">TRACKING IN</span><strong>Central Time</strong><span>9 AM — 9 PM daily</span></div>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Energy overview">
+          <article class="stat-card"><div class="stat-head">Check-ins <span aria-hidden="true">↗</span></div><p class="stat-value" id="stat-checkins">—</p><p class="stat-description" id="stat-checkins-detail">Recorded in this view</p></article>
+          <article class="stat-card"><div class="stat-head">Response rate <span aria-hidden="true">◷</span></div><p class="stat-value" id="stat-rate">—</p><p class="stat-description">Of elapsed scheduled hours</p></article>
+          <article class="stat-card"><div class="stat-head">Typical energy <span aria-hidden="true">◈</span></div><p class="stat-value stat-energy" id="stat-typical">—</p><p class="stat-description" id="stat-typical-detail">Most frequent answer</p></article>
+        </section>
+
+        <section class="panel heat-panel" aria-labelledby="activity-title">
+          <div class="panel-head">
+            <div><p class="section-index">01 / ACTIVITY</p><h2 id="activity-title">The energy map</h2><p class="panel-subtitle">Each square is one hourly check-in. Tap or click for details.</p></div>
+            <div class="field-wrap"><label for="range-select">SHOW</label><select id="range-select" aria-label="Time range"><option value="14">Last 14 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div>
+          </div>
+          <div class="heatmap-scroll" tabindex="0" aria-label="Scrollable energy heatmap">
+            <div id="heatmap" class="heatmap" role="grid" aria-label="Energy readings by day and hour"></div>
+          </div>
+          <div class="heat-footer"><div class="legend" aria-label="Energy level legend"><span class="legend-label">ENERGY LEVEL</span><span><i class="legend-swatch is-low"></i> Low</span><span><i class="legend-swatch is-avg"></i> Avg</span><span><i class="legend-swatch is-high"></i> High</span><span><i class="legend-swatch is-none"></i> No response</span></div><button class="text-button" id="export-csv" type="button">Export CSV <span aria-hidden="true">↗</span></button></div>
+        </section>
+
+        <div class="lower-grid">
+          <section class="panel trend-panel" aria-labelledby="trend-title">
+            <div class="panel-head compact"><div><p class="section-index">02 / PATTERN</p><h2 id="trend-title">The daily curve</h2><p class="panel-subtitle">Average energy on days with responses</p></div></div>
+            <div id="trend-chart" class="trend-chart" role="img" aria-label="Daily energy trend"></div>
+            <div class="trend-scale"><span>LOW <i></i> 1</span><span>AVG <i></i> 2</span><span>HIGH <i></i> 3</span></div>
+          </section>
+          <section class="panel detail-panel" aria-labelledby="detail-title">
+            <div class="panel-head compact"><div><p class="section-index">03 / DETAIL</p><h2 id="detail-title">Under the surface</h2><p class="panel-subtitle">A closer look at each moment</p></div></div>
+            <div id="slot-detail" class="slot-detail" aria-live="polite"><p class="detail-empty">Choose a square on the map to inspect that hour.</p></div>
+          </section>
+        </div>
+
+        <p id="load-error" class="load-error" role="alert" hidden></p>
+      </main>
+      <footer class="site-footer"><span>Made for noticing patterns, not chasing perfection.</span><span>Updated approximately hourly · America/Chicago</span></footer>
+    </div>
+  </body>
+</html>

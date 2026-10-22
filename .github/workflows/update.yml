@@ -1,0 +1,81 @@
+name: Update energy dashboard
+
+on:
+  # UTC schedule. Every hour, regardless of daylight-saving changes.
+  # Actions scheduling is best-effort, so :17 avoids the busy top of hour.
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update.yml'
+      - 'scripts/**'
+      - 'site/**'
+      - 'data/events.json'
+      - 'package.json'
+      - 'tests/**'
+
+concurrency:
+  group: energy-tracker-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run tests
+        run: npm test
+
+      - name: Collect ntfy responses
+        env:
+          NTFY_RESPONSE_TOPIC: ${{ secrets.NTFY_RESPONSE_TOPIC }}
+        run: node scripts/collect.mjs
+
+      - name: Commit new readings to main
+        run: |
+          if ! git diff --quiet -- data/events.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/events.json
+            git commit -m "chore: update energy history [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "No new readings to commit."
+          fi
+
+      - name: Build static dashboard data
+        run: node scripts/build.mjs
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

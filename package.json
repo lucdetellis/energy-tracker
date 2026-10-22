@@ -1,0 +1,16 @@
+{
+  "name": "energy-tracker-pages",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A tiny ntfy-powered energy tracker, published on GitHub Pages",
+  "scripts": {
+    "test": "node --test",
+    "collect": "node scripts/collect.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "python3 -m http.server 8000 --directory site"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
