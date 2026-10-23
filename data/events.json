@@ -285,5 +285,19 @@
     "hour": 22,
     "energy": "avg",
     "recordedAt": "2026-10-23T03:00:46.000Z"
+  },
+  {
+    "id": "QY9LSHzL3eiY",
+    "date": "2026-10-22",
+    "hour": 23,
+    "flag": "ris",
+    "recordedAt": "2026-10-23T04:03:23.000Z"
+  },
+  {
+    "id": "zZoma6bEQGwh",
+    "date": "2026-10-22",
+    "hour": 23,
+    "energy": "low",
+    "recordedAt": "2026-10-23T04:03:30.000Z"
   }
 ]
