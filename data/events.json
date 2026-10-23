@@ -257,5 +257,12 @@
     "hour": 18,
     "energy": "high",
     "recordedAt": "2026-10-22T23:06:39.000Z"
+  },
+  {
+    "id": "STK5fT24WmZs",
+    "date": "2026-10-22",
+    "hour": 19,
+    "energy": "high",
+    "recordedAt": "2026-10-23T00:17:24.000Z"
   }
 ]
