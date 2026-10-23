@@ -341,5 +341,12 @@
     "hour": 14,
     "energy": "high",
     "recordedAt": "2026-10-23T19:32:55.000Z"
+  },
+  {
+    "id": "O2Suz78zKQP5",
+    "date": "2026-10-23",
+    "hour": 15,
+    "energy": "high",
+    "recordedAt": "2026-10-23T20:19:25.000Z"
   }
 ]
