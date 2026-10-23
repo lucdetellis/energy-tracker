@@ -369,5 +369,12 @@
     "hour": 17,
     "energy": "avg",
     "recordedAt": "2026-10-23T22:27:07.000Z"
+  },
+  {
+    "id": "uRQn7cRwKmFZ",
+    "date": "2026-10-23",
+    "hour": 18,
+    "energy": "high",
+    "recordedAt": "2026-10-23T23:00:49.000Z"
   }
 ]
