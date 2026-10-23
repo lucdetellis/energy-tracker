@@ -37,6 +37,9 @@ export function flagAbbreviations(names) {
   }));
 }
 
+// Deliberately goofy wording: lam -> "ate LAM".
+export const flagLabel = (flag) => `ate ${flag.toUpperCase()}`;
+
 export function latestPerSlot(events) {
   const slots = new Map();
   for (const event of events) {
@@ -58,6 +61,12 @@ export function dayAverage(slots, date) {
   if (!answers.length) return null;
   const score = answers.reduce((sum, event) => sum + LEVELS[event.energy], 0) / answers.length;
   return { score, level: levelFromScore(score), count: answers.length };
+}
+
+// Daily scores for the trend chart, oldest first. Today is still in progress, so it's left out.
+export function trendSeries(slots, dates, today) {
+  return dates.filter((date) => date !== today).reverse()
+    .map((date) => ({ date, score: dayAverage(slots, date)?.score ?? null }));
 }
 
 export function dayShift(day, offset) {

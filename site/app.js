@@ -1,6 +1,6 @@
 // A zero-build, read-only GitHub Pages client.
 // The ntfy topic and GitHub Actions secret never reach this code.
-import { ZONE, HOURS, LEVELS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, dayAverage, dayShift, recentDates, chicagoNow, toCsv } from './lib.js';
+import { ZONE, HOURS, LEVELS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, flagLabel, trendSeries, dayAverage, dayShift, recentDates, chicagoNow, toCsv } from './lib.js';
 
 const PAGE_SIZE = 14;
 const LEVEL_NAMES = { high: 'High', avg: 'Avg', low: 'Low' };
@@ -18,7 +18,6 @@ const shortHour = (hour) => `${hour % 12 || 12}${hour < 12 ? 'a' : 'p'}`;
 const longHour = (hour) => `${hour % 12 || 12} ${hour < 12 ? 'AM' : 'PM'}`;
 const dayLabel = (day) => new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' })
   .format(new Date(`${day}T12:00:00Z`));
-const flagName = (flag) => flag[0].toUpperCase() + flag.slice(1);
 const clockTime = (date) => new Intl.DateTimeFormat('en-US', { timeStyle: 'short', timeZone: ZONE }).format(date);
 
 function el(tag, className = '', text) {
@@ -82,7 +81,7 @@ function blocks(snapshot, date, size) {
     block.type = 'button';
     block.dataset.key = `${date}|${hour}`;
     block.setAttribute('aria-pressed', String(selected));
-    const flags = (snapshot.flags.get(`${date}|${hour}`) ?? []).map(flagName);
+    const flags = (snapshot.flags.get(`${date}|${hour}`) ?? []).map(flagLabel);
     block.setAttribute('aria-label', `${dayLabel(date)}, ${longHour(hour)}: ${LEVEL_NAMES[kind] ? `${LEVEL_NAMES[kind]} energy` : kind === 'future' ? 'upcoming' : 'no response'}${flags.length ? `; ${flags.join(', ')}` : ''}`);
     block.addEventListener('click', () => selectSlot(date, hour));
     grid.append(block);
@@ -92,7 +91,7 @@ function blocks(snapshot, date, size) {
 
 function detailText(snapshot, { date, hour }) {
   const { kind, event } = slotStatus(snapshot, date, hour);
-  const flags = (snapshot.flags.get(`${date}|${hour}`) ?? []).map(flagName);
+  const flags = (snapshot.flags.get(`${date}|${hour}`) ?? []).map(flagLabel);
   const suffix = flags.length ? ` · ${flags.join(', ')}` : '';
   if (!event) return `${longHour(hour)} · ${flags.length ? 'No energy response' : kind === 'future' ? 'Upcoming' : 'No response'}${suffix}`;
   const taps = state.events.filter((e) => e.date === date && e.hour === hour).length;
@@ -150,11 +149,11 @@ function svg(tag, attrs = {}, text) {
 
 function renderTrend(snapshot) {
   const root = $('trend-chart');
-  const dates = [...snapshot.dates].reverse();
-  const values = dates.map((date) => dayAverage(snapshot.slots, date)?.score ?? null);
+  const series = trendSeries(snapshot.slots, snapshot.dates, snapshot.now.date);
+  const dates = series.map((point) => point.date), values = series.map((point) => point.score);
   $('trend-range').textContent = `Last ${dates.length} days`;
   if (!values.some((value) => value !== null)) {
-    root.replaceChildren(el('p', 'py-8 text-center text-sm', 'Shows up after your first check-in.'));
+    root.replaceChildren(el('p', 'py-8 text-center text-sm', 'Shows up after your first full day of check-ins.'));
     return;
   }
 
@@ -182,7 +181,7 @@ function renderTrend(snapshot) {
   });
   chart.append(line);
   chart.append(svg('text', { x: left, y: height - 4, fill: 'currentColor', 'font-size': 10 }, dayLabel(dates[0]).replace(/^\w+, /, '')));
-  chart.append(svg('text', { x: width - right, y: height - 4, fill: 'currentColor', 'font-size': 10, 'text-anchor': 'end' }, 'Today'));
+  chart.append(svg('text', { x: width - right, y: height - 4, fill: 'currentColor', 'font-size': 10, 'text-anchor': 'end' }, 'Yesterday'));
   root.replaceChildren(chart);
 }
 

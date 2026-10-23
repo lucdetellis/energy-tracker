@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { HOURS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, dayAverage, levelFromScore, recentDates, toCsv } from '../site/lib.js';
+import { HOURS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, flagLabel, trendSeries, dayAverage, levelFromScore, recentDates, toCsv } from '../site/lib.js';
 
 const ev = (hour, energy, extra = {}) => ({
   id: `id-${hour}-${energy}`, date: '2026-10-21', hour, energy, recordedAt: `2026-10-21T${String(hour).padStart(2, '0')}:05:00.000Z`, ...extra,
@@ -72,4 +72,16 @@ test('exports energy readings and flags to CSV with quoted fields', () => {
     '"2026-10-21","23","low","","2026-10-22T04:05:00.000Z","a""b"\r\n' +
     '"2026-10-21","23","","ris","2026-10-22T04:06:00.000Z","c"',
   );
+});
+test('flags read as something you ate', () => {
+  assert.equal(flagLabel('lam'), 'ate LAM');
+  assert.equal(flagLabel('coffee'), 'ate COFFEE');
+});
+test('the trend leaves out today, which is still incomplete, oldest day first', () => {
+  const slots = latestPerSlot([
+    ev(9, 'high', { date: '2026-10-19' }), ev(9, 'low', { date: '2026-10-21' }), ev(9, 'avg', { date: '2026-10-22' }),
+  ]);
+  assert.deepEqual(trendSeries(slots, ['2026-10-22', '2026-10-21', '2026-10-20', '2026-10-19'], '2026-10-22'), [
+    { date: '2026-10-19', score: 3 }, { date: '2026-10-20', score: null }, { date: '2026-10-21', score: 1 },
+  ]);
 });
