@@ -320,5 +320,40 @@
     "hour": 12,
     "flag": "lam",
     "recordedAt": "2026-10-23T17:00:49.000Z"
+  },
+  {
+    "id": "5Q5berRCDsd3",
+    "date": "2026-10-23",
+    "hour": 13,
+    "flag": "coffee",
+    "recordedAt": "2026-10-23T18:01:52.000Z"
+  },
+  {
+    "id": "8Q2hJ4jAu2Xo",
+    "date": "2026-10-23",
+    "hour": 13,
+    "energy": "avg",
+    "recordedAt": "2026-10-23T18:02:14.000Z"
+  },
+  {
+    "id": "z1JnTtEF9ekE",
+    "date": "2026-10-23",
+    "hour": 14,
+    "energy": "high",
+    "recordedAt": "2026-10-23T19:32:55.000Z"
+  },
+  {
+    "id": "O2Suz78zKQP5",
+    "date": "2026-10-23",
+    "hour": 15,
+    "energy": "high",
+    "recordedAt": "2026-10-23T20:19:25.000Z"
+  },
+  {
+    "id": "HVmEROwXPQDt",
+    "date": "2026-10-23",
+    "hour": 16,
+    "energy": "high",
+    "recordedAt": "2026-10-23T21:00:36.000Z"
   }
 ]
