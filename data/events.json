@@ -481,5 +481,12 @@
     "hour": 17,
     "energy": "avg",
     "recordedAt": "2026-10-24T22:00:32.000Z"
+  },
+  {
+    "id": "s11vPoAb4cV7",
+    "date": "2026-10-24",
+    "hour": 18,
+    "energy": "low",
+    "recordedAt": "2026-10-24T23:09:30.000Z"
   }
 ]
