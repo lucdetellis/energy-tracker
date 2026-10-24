@@ -439,5 +439,19 @@
     "hour": 12,
     "energy": "avg",
     "recordedAt": "2026-10-24T17:00:22.000Z"
+  },
+  {
+    "id": "PMHqDwkqAtxM",
+    "date": "2026-10-24",
+    "hour": 13,
+    "flag": "lam",
+    "recordedAt": "2026-10-24T18:00:20.000Z"
+  },
+  {
+    "id": "R5kbJ2JwQa5J",
+    "date": "2026-10-24",
+    "hour": 13,
+    "energy": "low",
+    "recordedAt": "2026-10-24T18:00:24.000Z"
   }
 ]
