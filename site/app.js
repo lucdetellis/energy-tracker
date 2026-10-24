@@ -1,6 +1,6 @@
 // A zero-build, read-only GitHub Pages client.
 // The ntfy topic and GitHub Actions secret never reach this code.
-import { ZONE, HOURS, LEVELS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, flagLabel, trendSeries, dayAverage, dayShift, recentDates, chicagoNow, toCsv } from './lib.js';
+import { ZONE, HOURS, LEVELS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, flagLabel, trendSeries, dayMode, dayShift, recentDates, chicagoNow, toCsv } from './lib.js';
 
 const PAGE_SIZE = 14;
 const LEVEL_NAMES = { high: 'High', avg: 'Avg', low: 'Low' };
@@ -27,11 +27,11 @@ function el(tag, className = '', text) {
   return node;
 }
 
-function levelTag(average) {
-  if (!average) return el('span', 'text-xs text-neutral-400 dark:text-neutral-600', '—');
+function levelTag(mode) {
+  if (!mode) return el('span', 'text-xs text-neutral-400 dark:text-neutral-600', '—');
   const tag = el('span', 'inline-flex items-center gap-1.5 text-xs font-medium');
-  tag.title = `${average.score.toFixed(2)} / 3 across ${average.count} check-in${average.count === 1 ? '' : 's'}`;
-  tag.append(el('i', `h-2.5 w-2.5 rounded-[2px] bg-level-${average.level}`), LEVEL_NAMES[average.level]);
+  tag.title = Object.entries(mode.counts).map(([level, count]) => `${count} ${LEVEL_NAMES[level]}`).join(' · ');
+  tag.append(el('i', `h-2.5 w-2.5 rounded-[2px] bg-level-${mode.level}`), LEVEL_NAMES[mode.level]);
   return tag;
 }
 
@@ -101,7 +101,7 @@ function detailText(snapshot, { date, hour }) {
 function renderToday(snapshot) {
   const today = snapshot.now.date;
   $('today-date').textContent = dayLabel(today);
-  $('today-average').replaceChildren(levelTag(dayAverage(snapshot.slots, today)));
+  $('today-average').replaceChildren(levelTag(dayMode(snapshot.slots, today)));
   $('today-blocks').replaceChildren(...blocks(snapshot, today, 'lg').children);
   const flags = flagRow(snapshot, today, 'lg');
   $('today-flags').replaceChildren(...(flags?.children ?? []));
@@ -122,7 +122,7 @@ function renderHistory(snapshot) {
     const row = el('li', 'py-2');
     row.append(el('p', 'mb-1 text-xs text-neutral-500 dark:text-neutral-400', index === 0 ? `Yesterday · ${dayLabel(date)}` : dayLabel(date)));
     const line = el('div', 'grid grid-cols-[1fr_3rem] items-center gap-2');
-    const tag = levelTag(dayAverage(snapshot.slots, date));
+    const tag = levelTag(dayMode(snapshot.slots, date));
     tag.classList.add('justify-self-end');
     const hours = el('div');
     hours.append(blocks(snapshot, date, 'sm'));

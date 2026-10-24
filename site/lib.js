@@ -63,6 +63,19 @@ export function dayAverage(slots, date) {
   return { score, level: levelFromScore(score), count: answers.length };
 }
 
+// Most common level of the day. Ties: high vs low (or all three) -> avg; avg vs x -> x.
+export function dayMode(slots, date) {
+  const answers = HOURS.map((hour) => slots.get(`${date}|${hour}`)).filter(Boolean);
+  if (!answers.length) return null;
+  const counts = { high: 0, avg: 0, low: 0 };
+  for (const event of answers) counts[event.energy]++;
+  const top = Math.max(counts.high, counts.low);
+  const level = counts.avg > top ? 'avg'
+    : counts.high === counts.low ? 'avg'
+    : counts.high > counts.low ? 'high' : 'low';
+  return { level, counts, count: answers.length };
+}
+
 // Daily scores for the trend chart, oldest first. Today is still in progress, so it's left out.
 export function trendSeries(slots, dates, today) {
   return dates.filter((date) => date !== today).reverse()

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { HOURS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, flagLabel, trendSeries, dayAverage, levelFromScore, recentDates, toCsv } from '../site/lib.js';
+import { HOURS, validEvent, validFlag, latestPerSlot, flagsPerSlot, flagAbbreviations, flagLabel, trendSeries, dayAverage, dayMode, levelFromScore, recentDates, toCsv } from '../site/lib.js';
 
 const ev = (hour, energy, extra = {}) => ({
   id: `id-${hour}-${energy}`, date: '2026-10-21', hour, energy, recordedAt: `2026-10-21T${String(hour).padStart(2, '0')}:05:00.000Z`, ...extra,
@@ -84,4 +84,26 @@ test('the trend leaves out today, which is still incomplete, oldest day first', 
   assert.deepEqual(trendSeries(slots, ['2026-10-22', '2026-10-21', '2026-10-20', '2026-10-19'], '2026-10-22'), [
     { date: '2026-10-19', score: 3 }, { date: '2026-10-20', score: null }, { date: '2026-10-21', score: 1 },
   ]);
+});
+const modeOf = (...levels) => dayMode(latestPerSlot(levels.map((level, i) => ev(9 + i, level))), '2026-10-21')?.level;
+test('a day is labelled with its most common level', () => {
+  assert.equal(modeOf('high', 'high', 'low', 'avg'), 'high');
+  assert.equal(modeOf('low', 'avg', 'low'), 'low');
+  assert.equal(modeOf('avg'), 'avg');
+});
+test('a high/low tie is labelled avg', () => {
+  assert.equal(modeOf('high', 'low'), 'avg');
+  assert.equal(modeOf('high', 'high', 'low', 'low', 'avg'), 'avg');
+});
+test('a tie with avg goes to the other level', () => {
+  assert.equal(modeOf('high', 'avg'), 'high');
+  assert.equal(modeOf('avg', 'low', 'avg', 'low'), 'low');
+});
+test('a three-way tie is labelled avg', () => {
+  assert.equal(modeOf('high', 'avg', 'low'), 'avg');
+});
+test('mode counts each level, null when unanswered', () => {
+  const slots = latestPerSlot([ev(9, 'high'), ev(10, 'high'), ev(11, 'low')]);
+  assert.deepEqual(dayMode(slots, '2026-10-21'), { level: 'high', counts: { high: 2, avg: 0, low: 1 }, count: 3 });
+  assert.equal(dayMode(slots, '2026-10-20'), null);
 });
