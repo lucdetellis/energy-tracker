@@ -551,5 +551,26 @@
     "hour": 12,
     "energy": "high",
     "recordedAt": "2026-10-25T17:29:28.000Z"
+  },
+  {
+    "id": "artQoSaoX9er",
+    "date": "2026-10-25",
+    "hour": 13,
+    "energy": "high",
+    "recordedAt": "2026-10-25T19:00:34.000Z"
+  },
+  {
+    "id": "XvG0D1wORC13",
+    "date": "2026-10-25",
+    "hour": 14,
+    "energy": "avg",
+    "recordedAt": "2026-10-25T19:00:37.000Z"
+  },
+  {
+    "id": "anyArOhx2ftE",
+    "date": "2026-10-25",
+    "hour": 13,
+    "flag": "lam",
+    "recordedAt": "2026-10-25T19:00:56.000Z"
   }
 ]
