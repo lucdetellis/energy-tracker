@@ -523,5 +523,12 @@
     "hour": 23,
     "energy": "avg",
     "recordedAt": "2026-10-25T05:29:41.000Z"
+  },
+  {
+    "id": "heWagpTXKSHZ",
+    "date": "2026-10-25",
+    "hour": 9,
+    "energy": "high",
+    "recordedAt": "2026-10-25T14:00:18.000Z"
   }
 ]
