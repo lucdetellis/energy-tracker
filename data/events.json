@@ -572,5 +572,12 @@
     "hour": 13,
     "flag": "lam",
     "recordedAt": "2026-10-25T19:00:56.000Z"
+  },
+  {
+    "id": "IQ9BitUHv2vT",
+    "date": "2026-10-25",
+    "hour": 15,
+    "energy": "high",
+    "recordedAt": "2026-10-25T20:06:26.000Z"
   }
 ]
