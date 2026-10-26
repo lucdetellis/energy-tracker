@@ -649,5 +649,12 @@
     "hour": 22,
     "energy": "high",
     "recordedAt": "2026-10-26T05:47:53.000Z"
+  },
+  {
+    "id": "vjhhiFjH2mjW",
+    "date": "2026-10-26",
+    "hour": 9,
+    "energy": "high",
+    "recordedAt": "2026-10-26T14:00:51.000Z"
   }
 ]
