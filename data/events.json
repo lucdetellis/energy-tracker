@@ -621,5 +621,33 @@
     "hour": 20,
     "energy": "avg",
     "recordedAt": "2026-10-26T01:22:12.000Z"
+  },
+  {
+    "id": "QBq5UDpYKyX4",
+    "date": "2026-10-25",
+    "hour": 21,
+    "energy": "high",
+    "recordedAt": "2026-10-26T05:47:10.000Z"
+  },
+  {
+    "id": "T2RtRSGxtaTE",
+    "date": "2026-10-25",
+    "hour": 22,
+    "energy": "avg",
+    "recordedAt": "2026-10-26T05:47:19.000Z"
+  },
+  {
+    "id": "KgRe5uGpPDUb",
+    "date": "2026-10-25",
+    "hour": 23,
+    "energy": "avg",
+    "recordedAt": "2026-10-26T05:47:22.000Z"
+  },
+  {
+    "id": "btKsmvFtrwit",
+    "date": "2026-10-25",
+    "hour": 22,
+    "energy": "high",
+    "recordedAt": "2026-10-26T05:47:53.000Z"
   }
 ]
