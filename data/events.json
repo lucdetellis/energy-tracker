@@ -691,5 +691,12 @@
     "hour": 12,
     "flag": "lam",
     "recordedAt": "2026-10-26T18:00:37.000Z"
+  },
+  {
+    "id": "g1z2VFCHiURd",
+    "date": "2026-10-26",
+    "hour": 14,
+    "energy": "avg",
+    "recordedAt": "2026-10-26T19:00:22.000Z"
   }
 ]
