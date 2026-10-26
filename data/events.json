@@ -670,5 +670,12 @@
     "hour": 11,
     "energy": "avg",
     "recordedAt": "2026-10-26T16:00:14.000Z"
+  },
+  {
+    "id": "iT1QDcOTDX8W",
+    "date": "2026-10-26",
+    "hour": 12,
+    "energy": "high",
+    "recordedAt": "2026-10-26T17:00:18.000Z"
   }
 ]
