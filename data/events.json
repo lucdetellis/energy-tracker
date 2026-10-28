@@ -873,5 +873,19 @@
     "hour": 11,
     "energy": "avg",
     "recordedAt": "2026-10-28T16:07:27.000Z"
+  },
+  {
+    "id": "I2YGpP5BJ2w1",
+    "date": "2026-10-28",
+    "hour": 12,
+    "energy": "avg",
+    "recordedAt": "2026-10-28T17:03:17.000Z"
+  },
+  {
+    "id": "9FVWStgwF65v",
+    "date": "2026-10-28",
+    "hour": 12,
+    "flag": "lam",
+    "recordedAt": "2026-10-28T17:03:23.000Z"
   }
 ]
