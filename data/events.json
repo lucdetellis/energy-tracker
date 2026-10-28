@@ -859,5 +859,12 @@
     "hour": 9,
     "energy": "high",
     "recordedAt": "2026-10-28T14:00:14.000Z"
+  },
+  {
+    "id": "NcxTowsbrmKp",
+    "date": "2026-10-28",
+    "hour": 10,
+    "energy": "avg",
+    "recordedAt": "2026-10-28T15:00:30.000Z"
   }
 ]
