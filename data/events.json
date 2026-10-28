@@ -852,5 +852,12 @@
     "hour": 23,
     "energy": "high",
     "recordedAt": "2026-10-28T04:01:03.000Z"
+  },
+  {
+    "id": "PpDdOtjXhEgd",
+    "date": "2026-10-28",
+    "hour": 9,
+    "energy": "high",
+    "recordedAt": "2026-10-28T14:00:14.000Z"
   }
 ]
