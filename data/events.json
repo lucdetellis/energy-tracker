@@ -971,5 +971,33 @@
     "hour": 9,
     "energy": "high",
     "recordedAt": "2026-10-29T14:27:29.000Z"
+  },
+  {
+    "id": "24EnmvSKbw0Z",
+    "date": "2026-10-29",
+    "hour": 10,
+    "energy": "high",
+    "recordedAt": "2026-10-29T18:38:00.000Z"
+  },
+  {
+    "id": "4RgBB1lNipfv",
+    "date": "2026-10-29",
+    "hour": 11,
+    "energy": "high",
+    "recordedAt": "2026-10-29T18:38:02.000Z"
+  },
+  {
+    "id": "miuXTmsN9PiG",
+    "date": "2026-10-29",
+    "hour": 12,
+    "energy": "avg",
+    "recordedAt": "2026-10-29T18:38:04.000Z"
+  },
+  {
+    "id": "MsLkBJ3Tq6Lh",
+    "date": "2026-10-29",
+    "hour": 13,
+    "energy": "avg",
+    "recordedAt": "2026-10-29T18:38:09.000Z"
   }
 ]
