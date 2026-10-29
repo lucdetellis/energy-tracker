@@ -1027,5 +1027,19 @@
     "hour": 16,
     "energy": "low",
     "recordedAt": "2026-10-29T21:12:44.000Z"
+  },
+  {
+    "id": "7Pg2hctgJxMJ",
+    "date": "2026-10-29",
+    "hour": 17,
+    "energy": "low",
+    "recordedAt": "2026-10-29T23:16:16.000Z"
+  },
+  {
+    "id": "C1dMuB6kV6zk",
+    "date": "2026-10-29",
+    "hour": 18,
+    "energy": "low",
+    "recordedAt": "2026-10-29T23:16:18.000Z"
   }
 ]
