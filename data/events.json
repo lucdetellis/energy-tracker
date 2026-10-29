@@ -908,5 +908,19 @@
     "hour": 16,
     "energy": "high",
     "recordedAt": "2026-10-28T21:00:11.000Z"
+  },
+  {
+    "id": "Mq8a8dxEriRZ",
+    "date": "2026-10-28",
+    "hour": 18,
+    "energy": "avg",
+    "recordedAt": "2026-10-29T00:06:39.000Z"
+  },
+  {
+    "id": "4KquZ1IW9ZRx",
+    "date": "2026-10-28",
+    "hour": 19,
+    "energy": "low",
+    "recordedAt": "2026-10-29T00:06:45.000Z"
   }
 ]
