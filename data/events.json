@@ -1069,5 +1069,12 @@
     "hour": 12,
     "energy": "avg",
     "recordedAt": "2026-10-30T17:00:21.000Z"
+  },
+  {
+    "id": "DwnEldsqWzfJ",
+    "date": "2026-10-30",
+    "hour": 12,
+    "flag": "lam",
+    "recordedAt": "2026-10-30T17:45:00.000Z"
   }
 ]
