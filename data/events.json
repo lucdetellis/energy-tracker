@@ -1118,5 +1118,19 @@
     "hour": 19,
     "energy": "low",
     "recordedAt": "2026-10-31T00:00:23.000Z"
+  },
+  {
+    "id": "7WixoNwkTbfl",
+    "date": "2026-10-31",
+    "hour": 10,
+    "energy": "high",
+    "recordedAt": "2026-10-31T16:00:42.000Z"
+  },
+  {
+    "id": "3TjBSrQml9fb",
+    "date": "2026-10-31",
+    "hour": 11,
+    "energy": "high",
+    "recordedAt": "2026-10-31T16:00:46.000Z"
   }
 ]
