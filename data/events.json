@@ -1132,5 +1132,19 @@
     "hour": 11,
     "energy": "high",
     "recordedAt": "2026-10-31T16:00:46.000Z"
+  },
+  {
+    "id": "P6iYSQ4wxmNI",
+    "date": "2026-10-31",
+    "hour": 12,
+    "energy": "avg",
+    "recordedAt": "2026-10-31T17:10:39.000Z"
+  },
+  {
+    "id": "f84YV0bg8e1g",
+    "date": "2026-10-31",
+    "hour": 12,
+    "flag": "lam",
+    "recordedAt": "2026-10-31T17:10:40.000Z"
   }
 ]
