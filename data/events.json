@@ -1153,5 +1153,26 @@
     "hour": 13,
     "energy": "avg",
     "recordedAt": "2026-10-31T18:03:00.000Z"
+  },
+  {
+    "id": "3Ku5KSpINHww",
+    "date": "2026-10-31",
+    "hour": 14,
+    "energy": "avg",
+    "recordedAt": "2026-10-31T20:00:18.000Z"
+  },
+  {
+    "id": "IdApUWEpwxy1",
+    "date": "2026-10-31",
+    "hour": 14,
+    "energy": "high",
+    "recordedAt": "2026-10-31T20:00:25.000Z"
+  },
+  {
+    "id": "0BpwxxPZ64QV",
+    "date": "2026-10-31",
+    "hour": 15,
+    "energy": "high",
+    "recordedAt": "2026-10-31T20:00:27.000Z"
   }
 ]
