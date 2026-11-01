@@ -1202,5 +1202,33 @@
     "hour": 12,
     "energy": "high",
     "recordedAt": "2026-11-01T18:15:42.000Z"
+  },
+  {
+    "id": "GgH6ZFzDCtHM",
+    "date": "2026-11-01",
+    "hour": 13,
+    "energy": "avg",
+    "recordedAt": "2026-11-01T21:01:14.000Z"
+  },
+  {
+    "id": "Dl37GRZeGfxc",
+    "date": "2026-11-01",
+    "hour": 14,
+    "energy": "avg",
+    "recordedAt": "2026-11-01T21:01:16.000Z"
+  },
+  {
+    "id": "NJ2vFch0iKI1",
+    "date": "2026-11-01",
+    "hour": 15,
+    "flag": "coffee",
+    "recordedAt": "2026-11-01T21:01:21.000Z"
+  },
+  {
+    "id": "N7CHJfJ0Pklz",
+    "date": "2026-11-01",
+    "hour": 15,
+    "energy": "avg",
+    "recordedAt": "2026-11-01T21:01:23.000Z"
   }
 ]
