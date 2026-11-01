@@ -1195,5 +1195,12 @@
     "hour": 11,
     "flag": "lam",
     "recordedAt": "2026-11-01T17:08:13.000Z"
+  },
+  {
+    "id": "ocatIJurlBcO",
+    "date": "2026-11-01",
+    "hour": 12,
+    "energy": "high",
+    "recordedAt": "2026-11-01T18:15:42.000Z"
   }
 ]
