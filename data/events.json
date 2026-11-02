@@ -1237,5 +1237,19 @@
     "hour": 16,
     "energy": "avg",
     "recordedAt": "2026-11-01T22:47:22.000Z"
+  },
+  {
+    "id": "06HN1pK7wzqy",
+    "date": "2026-11-01",
+    "hour": 17,
+    "energy": "avg",
+    "recordedAt": "2026-11-02T00:00:14.000Z"
+  },
+  {
+    "id": "rPTwkcvC0dsQ",
+    "date": "2026-11-01",
+    "hour": 18,
+    "energy": "avg",
+    "recordedAt": "2026-11-02T00:00:15.000Z"
   }
 ]
